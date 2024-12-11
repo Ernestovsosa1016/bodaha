@@ -44,7 +44,7 @@
                 formData.append('files[]', files[i]);
             }
 
-            fetch('https://bodaha.onrender.com', {  // Actualiza con la URL de Render
+            fetch('https://bodaha.onrender.com/upload', { // Asegúrate de usar la URL correcta
                 method: 'POST',
                 body: formData
             }).then(response => {
@@ -58,7 +58,7 @@
         });
 
         function loadGallery() {
-            fetch('https://your-backend-url.com/gallery')  // Actualiza con la URL de Render
+            fetch('https://bodaha.onrender.com/gallery') // Asegúrate de usar la URL correcta
                 .then(response => response.json())
                 .then(data => {
                     let gallery = document.getElementById('gallery');
