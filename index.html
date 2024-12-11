@@ -72,8 +72,10 @@
                     let gallery = document.getElementById('gallery');
                     gallery.innerHTML = '';
                     data.images.forEach(image => {
+                        // Formatear la URL para cargar la imagen directamente
+                        let imgUrl = image.url.replace("/view?usp=drivesdk", "/uc?export=view");
                         let imgElement = document.createElement('img');
-                        imgElement.src = image.url;
+                        imgElement.src = imgUrl;
                         imgElement.alt = 'Foto de Boda';
                         gallery.appendChild(imgElement);
                     });
