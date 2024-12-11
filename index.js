@@ -9,7 +9,7 @@ const cors = require('cors');
 const app = express();
 const upload = multer({ dest: 'uploads/' });
 app.use(bodyParser.json());
-app.use(cors({ origin: 'https://heribertoalejandra.netlify.app' })); // Permitir solicitudes desde tu dominio específico
+app.use(cors({ origin: 'https://heribertoalejandra.netlify.app' }));
 app.use(express.static('public'));
 
 const SCOPES = ['https://www.googleapis.com/auth/drive.file'];
@@ -46,10 +46,14 @@ auth.getClient().then(client => {
                 return driveService.files.create({
                     resource: fileMetadata,
                     media: media,
-                    fields: 'id'
+                    fields: 'id, webViewLink'
                 }).then(response => {
                     fs.unlinkSync(file.path); // Remove the file from local folder after upload
-                    return `https://drive.google.com/uc?id=${response.data.id}`;
+                    return {
+                        id: response.data.id,
+                        name: file.originalname,
+                        url: response.data.webViewLink
+                    };
                 });
             }));
 
@@ -63,12 +67,12 @@ auth.getClient().then(client => {
     app.get('/gallery', async (req, res) => {
         try {
             const response = await driveService.files.list({
-                pageSize: 10,
-                fields: 'files(id, name, mimeType)'
+                pageSize: 10, 
+                fields: 'files(id, name, webViewLink)'
             });
 
             const files = response.data.files.map(file => {
-                return { name: file.name, url: `https://drive.google.com/uc?id=${file.id}` };
+                return { name: file.name, url: file.webViewLink };
             });
 
             res.status(200).json({ images: files });
