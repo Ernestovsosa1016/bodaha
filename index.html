@@ -13,7 +13,7 @@
     </form>
     <div id="gallery">
         <!-- Añadir una URL de una imagen pública conocida para probar -->
-        <img src="https://www.w3schools.com/w3images/lights.jpg" alt="Imagen de Prueba">
+        <img id="testImage" src="https://www.w3schools.com/w3images/lights.jpg" alt="Imagen de Prueba">
     </div>
 
     <script>
@@ -56,16 +56,18 @@
                     gallery.innerHTML = '';
                     data.images.forEach((image, index) => {
                         console.log(`Image ${index} URL: ${image.url}`);
-                        let imgElement = document.createElement('img');
-                        imgElement.src = image.url;
-                        imgElement.alt = 'Foto de Boda';
-                        imgElement.onerror = function() {
-                            console.error(`Error loading image at ${image.url}`);
-                            let errorMessage = document.createElement('p');
-                            errorMessage.textContent = `Error al cargar la imagen: ${image.name}`;
-                            gallery.appendChild(errorMessage);
-                        };
-                        gallery.appendChild(imgElement);
+                        setTimeout(() => {  // Añadir un pequeño retraso para la carga de la imagen
+                            let imgElement = document.createElement('img');
+                            imgElement.src = image.url;
+                            imgElement.alt = 'Foto de Boda';
+                            imgElement.onerror = function() {
+                                console.error(`Error loading image at ${image.url}`);
+                                let errorMessage = document.createElement('p');
+                                errorMessage.textContent = `Error al cargar la imagen: ${image.name}`;
+                                gallery.appendChild(errorMessage);
+                            };
+                            gallery.appendChild(imgElement);
+                        }, 100); // Retraso de 100 milisegundos
                     });
                 })
                 .catch(error => {
