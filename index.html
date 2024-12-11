@@ -72,17 +72,12 @@
                     let gallery = document.getElementById('gallery');
                     gallery.innerHTML = '';
                     data.images.forEach((image, index) => {
-                        // Verificar si la URL de la imagen es accesible
                         console.log(`Image ${index} URL: ${image.url}`);
-                        // Formatear la URL para cargar la imagen directamente
-                        let imgUrl = image.url.replace("/view?usp=drivesdk", "/uc?export=view");
-                        console.log(`Formatted Image ${index} URL: ${imgUrl}`);
                         let imgElement = document.createElement('img');
-                        imgElement.src = imgUrl;
+                        imgElement.src = image.url;
                         imgElement.alt = 'Foto de Boda';
                         imgElement.onerror = function() {
-                            console.error(`Error loading image at ${imgUrl}`);
-                            // Mostrar mensaje de error en la página para la imagen que no se carga
+                            console.error(`Error loading image at ${image.url}`);
                             let errorMessage = document.createElement('p');
                             errorMessage.textContent = `Error al cargar la imagen: ${image.name}`;
                             gallery.appendChild(errorMessage);

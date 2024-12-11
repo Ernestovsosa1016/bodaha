@@ -48,7 +48,7 @@ auth.getClient().then(client => {
                 return driveService.files.create({
                     resource: fileMetadata,
                     media: media,
-                    fields: 'id, webViewLink'
+                    fields: 'id'
                 }).then(async response => {
                     const fileId = response.data.id;
                     // Hacer público el archivo
@@ -59,12 +59,13 @@ auth.getClient().then(client => {
                             type: 'anyone',
                         }
                     });
+                    const fileUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;
                     console.log(`File uploaded: ${file.originalname} with ID: ${fileId}`);
                     fs.unlinkSync(file.path); // Remove the file from local folder after upload
                     return {
                         id: fileId,
                         name: file.originalname,
-                        url: response.data.webViewLink
+                        url: fileUrl
                     };
                 });
             }));
@@ -82,12 +83,13 @@ auth.getClient().then(client => {
             console.log('Fetching gallery...');
             const response = await driveService.files.list({
                 pageSize: 10, 
-                fields: 'files(id, name, webViewLink)'
+                fields: 'files(id, name)'
             });
 
             const files = response.data.files.map(file => {
-                console.log(`File found: ${file.name} with URL: ${file.webViewLink}`);
-                return { name: file.name, url: file.webViewLink };
+                const fileUrl = `https://drive.google.com/uc?export=view&id=${file.id}`;
+                console.log(`File found: ${file.name} with URL: ${fileUrl}`);
+                return { name: file.name, url: fileUrl };
             });
 
             console.log('Gallery fetched successfully.');
