@@ -1,7 +1,6 @@
 const express = require('express');
 const multer = require('multer');
 const fs = require('fs');
-const path = require('path');
 const { google } = require('googleapis');
 const bodyParser = require('body-parser');
 const cors = require('cors');
