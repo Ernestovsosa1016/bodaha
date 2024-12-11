@@ -4,15 +4,15 @@
     "description": "Aplicación web para subir fotos de una boda y almacenarlas en Google Drive",
     "main": "index.js",
     "scripts": {
-      "start": "node index.js"
+        "start": "node index.js"
     },
     "dependencies": {
-      "express": "^4.17.1",
-      "multer": "^1.4.3",
-      "googleapis": "^91.0.0",
-      "body-parser": "^1.19.0"
+        "body-parser": "^1.19.0",
+        "cors": "^2.8.5",
+        "express": "^4.17.1",
+        "googleapis": "^91.0.0",
+        "multer": "^1.4.3"
     },
     "author": "",
     "license": "ISC"
-  }
-  
+}

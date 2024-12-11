@@ -4,10 +4,12 @@ const fs = require('fs');
 const path = require('path');
 const { google } = require('googleapis');
 const bodyParser = require('body-parser');
+const cors = require('cors'); // Requiere cors
 
 const app = express();
 const upload = multer({ dest: 'uploads/' });
 app.use(bodyParser.json());
+app.use(cors()); // Habilitar CORS para todas las solicitudes
 app.use(express.static('public'));
 
 const SCOPES = ['https://www.googleapis.com/auth/drive.file'];
