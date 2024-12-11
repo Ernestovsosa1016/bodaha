@@ -81,6 +81,10 @@
                         imgElement.alt = 'Foto de Boda';
                         imgElement.onerror = function() {
                             console.error(`Error loading image at ${imgUrl}`);
+                            // Mostrar mensaje de error en la página para la imagen que no se carga
+                            let errorMessage = document.createElement('p');
+                            errorMessage.textContent = `Error al cargar la imagen: ${image.name}`;
+                            gallery.appendChild(errorMessage);
                         };
                         gallery.appendChild(imgElement);
                     });
