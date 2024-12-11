@@ -9,7 +9,7 @@ const cors = require('cors');
 const app = express();
 const upload = multer({ dest: 'uploads/' });
 app.use(bodyParser.json());
-app.use(cors()); // Habilitar CORS para todas las solicitudes
+app.use(cors({ origin: 'https://heribertoalejandra.netlify.app' })); // Permitir solicitudes desde tu dominio específico
 app.use(express.static('public'));
 
 const SCOPES = ['https://www.googleapis.com/auth/drive.file'];
@@ -64,7 +64,7 @@ auth.getClient().then(client => {
         try {
             const response = await driveService.files.list({
                 pageSize: 10,
-                fields: 'files(id, name)'
+                fields: 'files(id, name, mimeType)'
             });
 
             const files = response.data.files.map(file => {
