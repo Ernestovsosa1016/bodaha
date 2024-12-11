@@ -68,6 +68,7 @@
                     return response.json();
                 })
                 .then(data => {
+                    console.log('Gallery data:', data); // Imprimir los datos obtenidos
                     let gallery = document.getElementById('gallery');
                     gallery.innerHTML = '';
                     data.images.forEach(image => {

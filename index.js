@@ -51,7 +51,6 @@ auth.getClient().then(client => {
                     fields: 'id, webViewLink'
                 }).then(async response => {
                     const fileId = response.data.id;
-                    // Hacer público el archivo
                     await driveService.permissions.create({
                         fileId: fileId,
                         requestBody: {
