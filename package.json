@@ -1,0 +1,18 @@
+{
+    "name": "wedding-photo-album",
+    "version": "1.0.0",
+    "description": "Aplicación web para subir fotos de una boda y almacenarlas en Google Drive",
+    "main": "index.js",
+    "scripts": {
+      "start": "node index.js"
+    },
+    "dependencies": {
+      "express": "^4.17.1",
+      "multer": "^1.4.3",
+      "googleapis": "^39.2.0",
+      "body-parser": "^1.19.0"
+    },
+    "author": "",
+    "license": "ISC"
+  }
+  
