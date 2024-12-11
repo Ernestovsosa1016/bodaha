@@ -54,12 +54,19 @@
                 } else {
                     alert('Error al subir las fotos.');
                 }
+            }).catch(error => {
+                console.error('Error:', error);
             });
         });
 
         function loadGallery() {
             fetch('https://bodaha.onrender.com/gallery') // Asegúrate de usar la URL correcta
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error fetching gallery');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     let gallery = document.getElementById('gallery');
                     gallery.innerHTML = '';
@@ -69,6 +76,9 @@
                         imgElement.alt = 'Foto de Boda';
                         gallery.appendChild(imgElement);
                     });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
                 });
         }
 
