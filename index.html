@@ -4,34 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Álbum de Bodas</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f0f0f0;
-            padding: 20px;
-        }
-        h1 {
-            color: #333;
-        }
-        .upload-form {
-            margin-bottom: 20px;
-        }
-        .gallery img {
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
-            margin: 10px;
-        }
-    </style>
 </head>
 <body>
     <h1>Álbum de Bodas</h1>
-    <form class="upload-form" id="uploadForm">
+    <form id="uploadForm">
         <input type="file" id="fileInput" accept="image/*" multiple required>
         <button type="submit">Subir Fotos</button>
     </form>
-    <div class="gallery" id="gallery">
+    <div id="gallery">
         <!-- Añadir una URL de una imagen pública conocida para probar -->
         <img src="https://www.w3schools.com/w3images/lights.jpg" alt="Imagen de Prueba">
     </div>
