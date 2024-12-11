@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const { google } = require('googleapis');
 const bodyParser = require('body-parser');
-const cors = require('cors'); // Requiere cors
+const cors = require('cors');
 
 const app = express();
 const upload = multer({ dest: 'uploads/' });
@@ -13,10 +13,16 @@ app.use(cors()); // Habilitar CORS para todas las solicitudes
 app.use(express.static('public'));
 
 const SCOPES = ['https://www.googleapis.com/auth/drive.file'];
-const KEYFILEPATH = path.join(__dirname, 'credentials.json');
+
+let credentials;
+if (process.env.GOOGLE_CREDENTIALS_JSON) {
+    credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS_JSON);
+} else {
+    credentials = require('./credentials.json');
+}
 
 const auth = new google.auth.GoogleAuth({
-    keyFile: KEYFILEPATH,
+    credentials,
     scopes: SCOPES,
 });
 
@@ -71,8 +77,6 @@ auth.getClient().then(client => {
             res.status(500).send('Error fetching gallery');
         }
     });
-
-    
 
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
