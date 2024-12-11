@@ -76,6 +76,7 @@
                         console.log(`Image ${index} URL: ${image.url}`);
                         // Formatear la URL para cargar la imagen directamente
                         let imgUrl = image.url.replace("/view?usp=drivesdk", "/uc?export=view");
+                        console.log(`Formatted Image ${index} URL: ${imgUrl}`);
                         let imgElement = document.createElement('img');
                         imgElement.src = imgUrl;
                         imgElement.alt = 'Foto de Boda';
