@@ -9,7 +9,7 @@ const cors = require('cors');
 const app = express();
 const upload = multer({ dest: 'uploads/' });
 app.use(bodyParser.json());
-app.use(cors({ origin: 'https://heribertoalejandra.netlify.app' })); // Permitir solicitudes desde tu dominio específico
+app.use(cors({ origin: 'https://heribertoalejandra.netlify.app' }));
 app.use(express.static('public'));
 
 const SCOPES = ['https://www.googleapis.com/auth/drive.file'];
@@ -35,11 +35,13 @@ auth.getClient().then(client => {
         const files = req.files;
 
         if (!files || files.length === 0) {
+            console.error('No files were uploaded.');
             return res.status(400).send('No files were uploaded.');
         }
 
         try {
             const uploadedFiles = await Promise.all(files.map(file => {
+                console.log(`Uploading file: ${file.originalname}`);
                 const fileMetadata = { name: file.originalname };
                 const media = { mimeType: file.mimetype, body: fs.createReadStream(file.path) };
 
@@ -47,37 +49,51 @@ auth.getClient().then(client => {
                     resource: fileMetadata,
                     media: media,
                     fields: 'id, webViewLink'
-                }).then(response => {
+                }).then(async response => {
+                    const fileId = response.data.id;
+                    // Hacer público el archivo
+                    await driveService.permissions.create({
+                        fileId: fileId,
+                        requestBody: {
+                            role: 'reader',
+                            type: 'anyone',
+                        }
+                    });
+                    console.log(`File uploaded: ${file.originalname} with ID: ${fileId}`);
                     fs.unlinkSync(file.path); // Remove the file from local folder after upload
                     return {
-                        id: response.data.id,
+                        id: fileId,
                         name: file.originalname,
                         url: response.data.webViewLink
                     };
                 });
             }));
 
+            console.log('All files uploaded successfully.');
             res.status(200).json({ message: 'Files uploaded successfully', files: uploadedFiles });
         } catch (error) {
-            console.error(error);
+            console.error('Error uploading files:', error);
             res.status(500).send('Error uploading files');
         }
     });
 
     app.get('/gallery', async (req, res) => {
         try {
+            console.log('Fetching gallery...');
             const response = await driveService.files.list({
                 pageSize: 10, 
                 fields: 'files(id, name, webViewLink)'
             });
 
             const files = response.data.files.map(file => {
+                console.log(`File found: ${file.name} with URL: ${file.webViewLink}`);
                 return { name: file.name, url: file.webViewLink };
             });
 
+            console.log('Gallery fetched successfully.');
             res.status(200).json({ images: files });
         } catch (error) {
-            console.error(error);
+            console.error('Error fetching gallery:', error);
             res.status(500).send('Error fetching gallery');
         }
     });
