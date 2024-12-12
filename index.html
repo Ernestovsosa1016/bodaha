@@ -17,6 +17,11 @@
         .upload-form {
             margin-bottom: 20px;
         }
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
         .gallery img {
             width: 200px;
             height: 200px;
@@ -31,10 +36,7 @@
         <input type="file" id="fileInput" accept="image/*" multiple required>
         <button type="submit">Subir Fotos</button>
     </form>
-    <div class="gallery" id="gallery">
-        <!-- Añadir una URL de una imagen directamente para probar -->
-        <img src="hhttps://drive.usercontent.google.com/download?id=17ki-ihUVg38gYXDHEpDL22GotNsWvRsm" alt="Foto de Boda" onerror="this.onerror=null; this.src='fallback.jpg'">
-    </div>
+    <div class="gallery" id="gallery"></div>
 
     <script>
         document.getElementById('uploadForm').addEventListener('submit', function(event) {
@@ -44,10 +46,10 @@
             let formData = new FormData();
 
             for (let i = 0; i < files.length; i++) {
-                formData.append('files[]', files[i]);
+                formData.append('file', files[i]);
             }
 
-            fetch('https://bodaha.onrender.com/upload', {
+            fetch('https://tubackend.onrender.com/upload', {
                 method: 'POST',
                 body: formData
             }).then(response => {
@@ -63,39 +65,36 @@
         });
 
         function loadGallery() {
-    fetch('https://bodaha.onrender.com/gallery')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error fetching gallery');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Gallery data:', data);
-            let gallery = document.getElementById('gallery');
-            gallery.innerHTML = '';
-            data.images.forEach((image, index) => {
-                console.log(`Image ${index} URL: ${image.url}`);
-                let imgElement = document.createElement('img');
-                imgElement.src = image.url;
-                imgElement.alt = 'Foto de Boda';
-                imgElement.onerror = function() {
-                    console.error(`Error loading image at ${image.url}`);
-                    let errorMessage = document.createElement('p');
-                    errorMessage.textContent = `Error al cargar la imagen: ${image.name}`;
-                    gallery.appendChild(errorMessage);
-                };
-                gallery.appendChild(imgElement);
-            });
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-}
+            fetch('https://tubackend.onrender.com/gallery')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error fetching gallery');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    let gallery = document.getElementById('gallery');
+                    gallery.innerHTML = '';
+                    data.images.forEach((image, index) => {
+                        let imgElement = document.createElement('img');
+                        imgElement.src = image.url;
+                        imgElement.alt = 'Foto de Boda';
+                        imgElement.onerror = function() {
+                            console.error(`Error loading image at ${image.url}`);
+                            let errorMessage = document.createElement('p');
+                            errorMessage.textContent = `Error al cargar la imagen: ${image.name}`;
+                            gallery.appendChild(errorMessage);
+                        };
+                        gallery.appendChild(imgElement);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
 
-// Load gallery when the page loads
-loadGallery();
-
+        // Load gallery when the page loads
+        loadGallery();
     </script>
 </body>
 </html>
