@@ -31,22 +31,6 @@
         .upload-form button:hover {
             background-color: #666;
         }
-        .progress-bar {
-            width: 100%;
-            background-color: #f3f3f3;
-            margin-top: 10px;
-            height: 30px;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-        .progress {
-            height: 100%;
-            width: 0;
-            background-color: #76c7c0;
-            text-align: center;
-            line-height: 30px;
-            color: white;
-        }
         .gallery {
             display: flex;
             flex-wrap: wrap;
@@ -68,12 +52,9 @@
 <body>
     <h1><em>Nuestra Boda Heriberto & Alejandra</em></h1>
     <form class="upload-form" id="uploadForm">
-        <input type="file" id="fileInput" name="files" accept="image/*" multiple required>
+        <input type="file" id="fileInput" accept="image/*" multiple required>
         <button type="submit">Subir Fotos</button>
     </form>
-    <div class="progress-bar">
-        <div class="progress" id="progress"></div>
-    </div>
     <div class="gallery" id="gallery"></div>
 
     <script>
@@ -87,31 +68,19 @@
                 formData.append('files', files[i]);
             }
 
-            let xhr = new XMLHttpRequest();
-            xhr.open('POST', 'https://bodaha.onrender.com/upload', true);
-
-            xhr.upload.addEventListener('progress', function(e) {
-                if (e.lengthComputable) {
-                    let percentComplete = (e.loaded / e.total) * 100;
-                    document.getElementById('progress').style.width = percentComplete + '%';
-                    document.getElementById('progress').textContent = Math.round(percentComplete) + '%';
-                }
-            });
-
-            xhr.addEventListener('load', function() {
-                if (xhr.status === 200) {
+            fetch('https://bodaha.onrender.com/upload', {
+                method: 'POST',
+                body: formData
+            }).then(response => {
+                if (response.ok) {
                     alert('Fotos subidas exitosamente.');
                     loadGallery();
                 } else {
                     alert('Error al subir las fotos.');
                 }
+            }).catch(error => {
+                console.error('Error:', error);
             });
-
-            xhr.addEventListener('error', function() {
-                alert('Error al subir las fotos.');
-            });
-
-            xhr.send(formData);
         });
 
         function loadGallery() {
