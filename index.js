@@ -7,12 +7,12 @@ const fs = require('fs');
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cors({ origin: '*' }));  // Reemplaza con tu dominio Netlify
+app.use(cors({ origin: 'https://heribertoalejandra.netlify.app' }));  // Reemplaza con tu dominio de Netlify
 
 const s3 = new aws.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    region: 'us-east-1'  // Configura tu región
+    region: 'us-east-1'
 });
 
 const upload = multer({ dest: 'uploads/' });
@@ -25,7 +25,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
     }
 
     const params = {
-        Bucket: 'boda-album-fotos',  // Nombre de tu bucket en S3
+        Bucket: 'boda-album-fotos',
         Key: file.originalname,
         Body: fs.createReadStream(file.path),
         ContentType: file.mimetype
@@ -36,14 +36,14 @@ app.post('/upload', upload.single('file'), (req, res) => {
             return res.status(500).send('Error uploading file.');
         }
 
-        fs.unlinkSync(file.path);  // Elimina el archivo local
+        fs.unlinkSync(file.path);
         res.status(200).json({ message: 'File uploaded successfully', url: data.Location });
     });
 });
 
 app.get('/gallery', (req, res) => {
     const params = {
-        Bucket: 'boda-album-fotos'  // Nombre de tu bucket en S3
+        Bucket: 'boda-album-fotos'
     };
 
     s3.listObjectsV2(params, (err, data) => {
