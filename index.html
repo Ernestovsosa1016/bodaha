@@ -33,7 +33,7 @@
     </form>
     <div class="gallery" id="gallery">
         <!-- Añadir una URL de una imagen directamente para probar -->
-        <img src="https://drive.google.com/uc?export=view&id=TUIDDEIMAGEN" alt="Foto de Boda">
+        <img src="hhttps://drive.usercontent.google.com/download?id=17ki-ihUVg38gYXDHEpDL22GotNsWvRsm" alt="Foto de Boda" onerror="this.onerror=null; this.src='fallback.jpg'">
     </div>
 
     <script>
@@ -71,7 +71,7 @@
                     return response.json();
                 })
                 .then(data => {
-                    console.log('Gallery data:', data); // Imprimir los datos obtenidos
+                    console.log('Gallery data:', data);
                     let gallery = document.getElementById('gallery');
                     gallery.innerHTML = '';
                     data.images.forEach((image, index) => {
