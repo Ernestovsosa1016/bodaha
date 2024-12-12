@@ -15,9 +15,15 @@ const s3 = new aws.S3({
     region: 'us-east-1'  // Configura tu región
 });
 
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({
+    dest: 'uploads/',
+    limits: {
+        fileSize: 10 * 1024 * 1024, // Límite de 10MB por archivo
+        files: 100  // Limitar el número de archivos a 5
+    }
+});
 
-app.post('/upload', upload.array('files', 10), (req, res) => {
+app.post('/upload', upload.array('files', 5), (req, res) => {
     const files = req.files;
 
     if (!files || files.length === 0) {
@@ -43,6 +49,7 @@ app.post('/upload', upload.array('files', 10), (req, res) => {
             res.status(200).json({ message: 'Files uploaded successfully', urls: locations });
         })
         .catch(err => {
+            console.error('Error uploading files:', err);
             res.status(500).send('Error uploading files.');
         });
 });
