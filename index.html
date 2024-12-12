@@ -1,21 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Álbum de Bodas</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Times New Roman', Times, serif;
             text-align: center;
-            background-color: #f0f0f0;
+            background-color: #f4f4f4;
             padding: 20px;
         }
         h1 {
-            color: #333;
+            color: #444;
+            font-style: italic;
+            font-size: 2.5em;
+            margin-bottom: 0.5em;
         }
         .upload-form {
             margin-bottom: 20px;
+        }
+        .upload-form button {
+            background-color: #444;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .upload-form button:hover {
+            background-color: #666;
         }
         .gallery {
             display: flex;
@@ -27,11 +41,22 @@
             height: 200px;
             object-fit: cover;
             margin: 10px;
+            border: 2px solid #444;
+        }
+        .gallery div {
+            margin: 10px;
+            text-align: center;
+        }
+        .gallery a {
+            text-decoration: none;
+            color: #007bff;
+            display: block;
+            margin-top: 5px;
         }
     </style>
 </head>
 <body>
-    <h1>Nuestra Boda Heriberto & Alejandra</h1>
+    <h1><em>Nuestra Boda Heriberto & Alejandra</em></h1>
     <form class="upload-form" id="uploadForm">
         <input type="file" id="fileInput" accept="image/*" multiple required>
         <button type="submit">Subir Fotos</button>
@@ -76,6 +101,8 @@
                     let gallery = document.getElementById('gallery');
                     gallery.innerHTML = '';
                     data.images.forEach((image, index) => {
+                        let divElement = document.createElement('div');
+                        
                         let imgElement = document.createElement('img');
                         imgElement.src = image.url;
                         imgElement.alt = 'Foto de Boda';
@@ -83,9 +110,17 @@
                             console.error(`Error loading image at ${image.url}`);
                             let errorMessage = document.createElement('p');
                             errorMessage.textContent = `Error al cargar la imagen: ${image.name}`;
-                            gallery.appendChild(errorMessage);
+                            divElement.appendChild(errorMessage);
                         };
-                        gallery.appendChild(imgElement);
+
+                        let downloadLink = document.createElement('a');
+                        downloadLink.href = image.url;
+                        downloadLink.download = image.name;
+                        downloadLink.textContent = 'Descargar';
+
+                        divElement.appendChild(imgElement);
+                        divElement.appendChild(downloadLink);
+                        gallery.appendChild(divElement);
                     });
                 })
                 .catch(error => {
