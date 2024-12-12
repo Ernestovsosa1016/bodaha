@@ -47,12 +47,6 @@
             margin: 10px;
             text-align: center;
         }
-        .gallery a {
-            text-decoration: none;
-            color: #007bff;
-            display: block;
-            margin-top: 5px;
-        }
     </style>
 </head>
 <body>
@@ -113,13 +107,7 @@
                             divElement.appendChild(errorMessage);
                         };
 
-                        let downloadLink = document.createElement('a');
-                        downloadLink.href = image.url;
-                        downloadLink.download = image.name;
-                        downloadLink.textContent = 'Descargar';
-
                         divElement.appendChild(imgElement);
-                        divElement.appendChild(downloadLink);
                         gallery.appendChild(divElement);
                     });
                 })
