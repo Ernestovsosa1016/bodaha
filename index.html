@@ -44,12 +44,12 @@
             let fileInput = document.getElementById('fileInput');
             let files = fileInput.files;
             let formData = new FormData();
-
+    
             for (let i = 0; i < files.length; i++) {
                 formData.append('file', files[i]);
             }
-
-            fetch('https://tubackend.onrender.com/upload', {
+    
+            fetch('https://bodaha.onrender.com/upload', {  // Usa el URL de tu backend
                 method: 'POST',
                 body: formData
             }).then(response => {
@@ -63,9 +63,9 @@
                 console.error('Error:', error);
             });
         });
-
+    
         function loadGallery() {
-            fetch('https://tubackend.onrender.com/gallery')
+            fetch('https://bodaha.onrender.com/gallery')  // Usa el URL de tu backend
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Error fetching gallery');
@@ -92,9 +92,10 @@
                     console.error('Error:', error);
                 });
         }
-
+    
         // Load gallery when the page loads
         loadGallery();
     </script>
+    
 </body>
 </html>
