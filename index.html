@@ -44,11 +44,11 @@
             let fileInput = document.getElementById('fileInput');
             let files = fileInput.files;
             let formData = new FormData();
-    
+
             for (let i = 0; i < files.length; i++) {
-                formData.append('file', files[i]);
+                formData.append('files', files[i]);
             }
-    
+
             fetch('https://bodaha.onrender.com/upload', {
                 method: 'POST',
                 body: formData
@@ -63,7 +63,7 @@
                 console.error('Error:', error);
             });
         });
-    
+
         function loadGallery() {
             fetch('https://bodaha.onrender.com/gallery')
                 .then(response => {
@@ -92,11 +92,9 @@
                     console.error('Error:', error);
                 });
         }
-    
+
         // Load gallery when the page loads
         loadGallery();
     </script>
-    
-    
 </body>
 </html>

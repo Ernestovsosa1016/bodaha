@@ -12,33 +12,39 @@ app.use(cors({ origin: 'https://heribertoalejandra.netlify.app' }));  // Reempla
 const s3 = new aws.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    region: 'us-east-1'
+    region: 'us-east-1'  // Configura tu región
 });
 
 const upload = multer({ dest: 'uploads/' });
 
-app.post('/upload', upload.single('file'), (req, res) => {
-    const file = req.file;
+app.post('/upload', upload.array('files', 10), (req, res) => {
+    const files = req.files;
 
-    if (!file) {
-        return res.status(400).send('No file uploaded.');
+    if (!files || files.length === 0) {
+        return res.status(400).send('No files uploaded.');
     }
 
-    const params = {
-        Bucket: 'boda-album-fotos',
-        Key: file.originalname,
-        Body: fs.createReadStream(file.path),
-        ContentType: file.mimetype
-    };
+    const uploadPromises = files.map(file => {
+        const params = {
+            Bucket: 'boda-album-fotos',
+            Key: file.originalname,
+            Body: fs.createReadStream(file.path),
+            ContentType: file.mimetype
+        };
 
-    s3.upload(params, (err, data) => {
-        if (err) {
-            return res.status(500).send('Error uploading file.');
-        }
-
-        fs.unlinkSync(file.path);
-        res.status(200).json({ message: 'File uploaded successfully', url: data.Location });
+        return s3.upload(params).promise().then(data => {
+            fs.unlinkSync(file.path);
+            return data.Location;
+        });
     });
+
+    Promise.all(uploadPromises)
+        .then(locations => {
+            res.status(200).json({ message: 'Files uploaded successfully', urls: locations });
+        })
+        .catch(err => {
+            res.status(500).send('Error uploading files.');
+        });
 });
 
 app.get('/gallery', (req, res) => {
