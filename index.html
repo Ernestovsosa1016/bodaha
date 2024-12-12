@@ -3,17 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prueba de Imágenes</title>
+    <title>Álbum de Bodas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .upload-form {
+            margin-bottom: 20px;
+        }
+        .gallery img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            margin: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Prueba de Imágenes</h1>
-    <!-- Añadir una URL de una imagen pública conocida para probar -->
-    <img src="https://www.w3schools.com/w3images/lights.jpg" alt="Imagen de Prueba">
+    <h1>Álbum de Bodas</h1>
+    <form class="upload-form" id="uploadForm">
+        <input type="file" id="fileInput" accept="image/*" multiple required>
+        <button type="submit">Subir Fotos</button>
+    </form>
+    <div class="gallery" id="gallery">
+        <!-- Añadir una URL de una imagen directamente para probar -->
+        <img src="https://drive.google.com/uc?export=view&id=TUIDDEIMAGEN" alt="Foto de Boda">
+    </div>
 
-    <!-- Añadir una URL de una imagen desde Google Drive para probar -->
-    <img src="https://drive.google.com/uc?export=view&id=17ki-ihUVg38gYXDHEpDL22GotNsWVrRsm" alt="Imagen de Google Drive">
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            let fileInput = document.getElementById('fileInput');
+            let files = fileInput.files;
+            let formData = new FormData();
 
+            for (let i = 0; i < files.length; i++) {
+                formData.append('files[]', files[i]);
+            }
 
+            fetch('https://bodaha.onrender.com/upload', {
+                method: 'POST',
+                body: formData
+            }).then(response => {
+                if (response.ok) {
+                    alert('Fotos subidas exitosamente.');
+                    loadGallery();
+                } else {
+                    alert('Error al subir las fotos.');
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        });
 
+        function loadGallery() {
+            fetch('https://bodaha.onrender.com/gallery')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error fetching gallery');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Gallery data:', data); // Imprimir los datos obtenidos
+                    let gallery = document.getElementById('gallery');
+                    gallery.innerHTML = '';
+                    data.images.forEach((image, index) => {
+                        console.log(`Image ${index} URL: ${image.url}`);
+                        let imgElement = document.createElement('img');
+                        imgElement.src = image.url;
+                        imgElement.alt = 'Foto de Boda';
+                        imgElement.onerror = function() {
+                            console.error(`Error loading image at ${image.url}`);
+                            let errorMessage = document.createElement('p');
+                            errorMessage.textContent = `Error al cargar la imagen: ${image.name}`;
+                            gallery.appendChild(errorMessage);
+                        };
+                        gallery.appendChild(imgElement);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        // Load gallery when the page loads
+        loadGallery();
+    </script>
 </body>
 </html>
