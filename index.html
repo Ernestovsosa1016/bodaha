@@ -63,38 +63,39 @@
         });
 
         function loadGallery() {
-            fetch('https://bodaha.onrender.com/gallery')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error fetching gallery');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Gallery data:', data);
-                    let gallery = document.getElementById('gallery');
-                    gallery.innerHTML = '';
-                    data.images.forEach((image, index) => {
-                        console.log(`Image ${index} URL: ${image.url}`);
-                        let imgElement = document.createElement('img');
-                        imgElement.src = image.url;
-                        imgElement.alt = 'Foto de Boda';
-                        imgElement.onerror = function() {
-                            console.error(`Error loading image at ${image.url}`);
-                            let errorMessage = document.createElement('p');
-                            errorMessage.textContent = `Error al cargar la imagen: ${image.name}`;
-                            gallery.appendChild(errorMessage);
-                        };
-                        gallery.appendChild(imgElement);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        }
+    fetch('https://bodaha.onrender.com/gallery')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error fetching gallery');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Gallery data:', data);
+            let gallery = document.getElementById('gallery');
+            gallery.innerHTML = '';
+            data.images.forEach((image, index) => {
+                console.log(`Image ${index} URL: ${image.url}`);
+                let imgElement = document.createElement('img');
+                imgElement.src = image.url;
+                imgElement.alt = 'Foto de Boda';
+                imgElement.onerror = function() {
+                    console.error(`Error loading image at ${image.url}`);
+                    let errorMessage = document.createElement('p');
+                    errorMessage.textContent = `Error al cargar la imagen: ${image.name}`;
+                    gallery.appendChild(errorMessage);
+                };
+                gallery.appendChild(imgElement);
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
 
-        // Load gallery when the page loads
-        loadGallery();
+// Load gallery when the page loads
+loadGallery();
+
     </script>
 </body>
 </html>
