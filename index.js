@@ -8,7 +8,7 @@ const cors = require('cors');
 const app = express();
 const upload = multer({ dest: 'uploads/' });
 app.use(bodyParser.json());
-app.use(cors({ origin: 'https://heribertoalejandra.netlify.app' }));
+app.use(cors({ origin: '*' }));
 app.use(express.static('public'));
 
 const SCOPES = ['https://www.googleapis.com/auth/drive.file'];
