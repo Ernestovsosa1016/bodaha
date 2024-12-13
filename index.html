@@ -47,6 +47,25 @@
             margin: 10px;
             text-align: center;
         }
+        .alert {
+            display: none;
+            padding: 20px;
+            background-color: #4CAF50;
+            color: white;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            width: calc(100% - 40px);
+            max-width: 500px;
+            text-align: center;
+        }
+        .alert.show {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -55,6 +74,7 @@
         <input type="file" id="fileInput" accept="image/*" multiple required>
         <button type="submit">Subir Fotos</button>
     </form>
+    <div id="alert" class="alert">Agradecemos que compartas con nosotros este momento.</div>
     <div class="gallery" id="gallery"></div>
 
     <script>
@@ -73,7 +93,7 @@
                 body: formData
             }).then(response => {
                 if (response.ok) {
-                    alert('Fotos subidas exitosamente. Agradecemos que compartas con nosotros este momento.');
+                    showAlert();
                     loadGallery();
                 } else {
                     alert('Error al subir las fotos.');
@@ -82,6 +102,14 @@
                 console.error('Error:', error);
             });
         });
+
+        function showAlert() {
+            const alert = document.getElementById('alert');
+            alert.classList.add('show');
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 5000);
+        }
 
         function loadGallery() {
             fetch('https://bodaha.onrender.com/gallery')
