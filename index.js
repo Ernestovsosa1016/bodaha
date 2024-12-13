@@ -7,7 +7,7 @@ const fs = require('fs');
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cors({ origin: '*' }));  // Reemplaza con tu dominio de Netlify
+app.use(cors({ origin: 'https://heribertoalejandra.netlify.app' }));  // Reemplaza con tu dominio de Netlify
 
 const s3 = new aws.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
